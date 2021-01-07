@@ -5,3 +5,5 @@ My intention was to build a WebGL-based 3d sculpture that can be played. Give it
 ## Get Started
 
 git clone npm install npm start
+
+![Example](https://media.giphy.com/media/rt62VlWKbjMNUcWdSS/giphy.gif)
