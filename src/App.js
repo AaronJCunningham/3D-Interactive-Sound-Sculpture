@@ -3,14 +3,14 @@ import React, { useRef, useState } from "react";
 import { Canvas, useFrame } from "react-three-fiber";
 // Deai - R3F
 import { softShadows, MeshWobbleMaterial, OrbitControls } from "drei";
-import {RingObj} from './assets/RingObj'
-import {GlobeObj} from './assets/GlobeObj'
-import {ShapeObj} from './assets/ShapeObj'
+import { RingObj } from "./assets/RingObj";
+import { GlobeObj } from "./assets/GlobeObj";
+import { ShapeObj } from "./assets/ShapeObj";
 // Styles
 import "./App.scss";
 // React Spring
 import { useSpring, a } from "react-spring/three";
-import { playSound } from './components/playSound'
+import { playSound } from "./components/playSound";
 
 // soft Shadows
 softShadows();
@@ -31,24 +31,25 @@ const SpinningMesh = ({ position, color, speed, args }) => {
 
   const hybrid = () => {
     setExpand(!expand);
-    playSound()
+    playSound();
   };
   return (
     <>
-    <a.mesh
-      position={position}
-      ref={mesh}
-      onClick={hybrid}
-      scale={props.scale}
-      castShadow>
-      <icosahedronBufferGeometry attach='geometry' args={args} />
-      <MeshWobbleMaterial
-        color={color}
-        speed={speed}
-        attach='material'
-        factor={10}
-      />
-    </a.mesh>
+      <a.mesh
+        position={position}
+        ref={mesh}
+        onClick={hybrid}
+        scale={props.scale}
+        castShadow
+      >
+        <icosahedronBufferGeometry attach="geometry" args={args} />
+        <MeshWobbleMaterial
+          color={color}
+          speed={speed}
+          attach="material"
+          factor={10}
+        />
+      </a.mesh>
     </>
   );
 };
@@ -69,24 +70,25 @@ const SpinningShape = ({ position, color, speed, args }) => {
 
   const hybrid = () => {
     setExpand(!expand);
-    playSound()
+    playSound();
   };
   return (
     <>
-    <a.mesh
-      position={position}
-      ref={mesh}
-      onClick={hybrid}
-      scale={props.scale}
-      castShadow>
-      <tetrahedronBufferGeometry attach='geometry' args={args} />
-      <MeshWobbleMaterial
-        color={color}
-        speed={speed}
-        attach='material'
-        factor={10}
-      />
-    </a.mesh>
+      <a.mesh
+        position={position}
+        ref={mesh}
+        onClick={hybrid}
+        scale={props.scale}
+        castShadow
+      >
+        <tetrahedronBufferGeometry attach="geometry" args={args} />
+        <MeshWobbleMaterial
+          color={color}
+          speed={speed}
+          attach="material"
+          factor={10}
+        />
+      </a.mesh>
     </>
   );
 };
@@ -107,24 +109,25 @@ const SpinningCircle = ({ position, color, speed, args }) => {
 
   const hybrid = () => {
     setExpand(!expand);
-    playSound()
+    playSound();
   };
   return (
     <>
-    <a.mesh
-      position={position}
-      ref={mesh}
-      onClick={hybrid}
-      scale={props.scale}
-      castShadow>
-      <torusBufferGeometry attach='geometry' args={args} />
-      <MeshWobbleMaterial
-        color={color}
-        speed={speed}
-        attach='material'
-        factor={6}
-      />
-    </a.mesh>
+      <a.mesh
+        position={position}
+        ref={mesh}
+        onClick={hybrid}
+        scale={props.scale}
+        castShadow
+      >
+        <torusBufferGeometry attach="geometry" args={args} />
+        <MeshWobbleMaterial
+          color={color}
+          speed={speed}
+          attach="material"
+          factor={6}
+        />
+      </a.mesh>
     </>
   );
 };
@@ -132,12 +135,12 @@ const SpinningCircle = ({ position, color, speed, args }) => {
 const App = () => {
   return (
     <>
-    
       {/* Our Scene & Camera is already built into our canvas */}
       <Canvas
         colorManagement
         shadowMap
-        camera={{ position: [-5, 2, 10], fov: 60 }}>
+        camera={{ position: [-5, 2, 10], fov: 60 }}
+      >
         {/* This light makes things look pretty */}
         <ambientLight intensity={0.3} />
         {/* Our main source of light, also casting our shadow */}
@@ -157,27 +160,33 @@ const App = () => {
         <pointLight position={[-10, 0, -20]} intensity={0.5} />
         <pointLight position={[0, -10, 0]} intensity={1.5} />
         <group>
-          {RingObj.map((shape) => <SpinningMesh 
-          position={shape.position}
-          color={shape.color}
-          args={shape.args}
-          speed={shape.speed}
-          />)}
-          {GlobeObj.map((shape) => <SpinningCircle
-          position={shape.position}
-          color={shape.color}
-          args={shape.args}
-          speed={shape.speed}
-          />)}
-          {ShapeObj.map((shape) => <SpinningShape
-          position={shape.position}
-          color={shape.color}
-          args={shape.args}
-          speed={shape.speed}
-          />)}
+          {RingObj.map((shape) => (
+            <SpinningMesh
+              position={shape.position}
+              color={shape.color}
+              args={shape.args}
+              speed={shape.speed}
+            />
+          ))}
+          {GlobeObj.map((shape) => (
+            <SpinningCircle
+              position={shape.position}
+              color={shape.color}
+              args={shape.args}
+              speed={shape.speed}
+            />
+          ))}
+          {ShapeObj.map((shape) => (
+            <SpinningShape
+              position={shape.position}
+              color={shape.color}
+              args={shape.args}
+              speed={shape.speed}
+            />
+          ))}
         </group>
         {/* Allows us to move the canvas around for different prespectives */}
-        <OrbitControls autoRotate/>
+        <OrbitControls autoRotate />
       </Canvas>
     </>
   );
