@@ -3,6 +3,9 @@ import React, { useRef, useState } from "react";
 import { Canvas, useFrame } from "react-three-fiber";
 // Deai - R3F
 import { softShadows, MeshWobbleMaterial, OrbitControls } from "drei";
+import {RingObj} from './assets/RingObj'
+import {GlobeObj} from './assets/GlobeObj'
+import {ShapeObj} from './assets/ShapeObj'
 // Styles
 import "./App.scss";
 // React Spring
@@ -23,7 +26,7 @@ const SpinningMesh = ({ position, color, speed, args }) => {
   const [expand, setExpand] = useState(false);
   // React spring expand animation
   const props = useSpring({
-    scale: expand ? [1.4, 1.4, 1.4] : [1, 1, 1],
+    scale: expand ? [0.2, 0.2, 0.2] : [1, 1, 1],
   });
 
   const hybrid = () => {
@@ -38,26 +41,91 @@ const SpinningMesh = ({ position, color, speed, args }) => {
       onClick={hybrid}
       scale={props.scale}
       castShadow>
-      <boxBufferGeometry attach='geometry' args={args} />
+      <icosahedronBufferGeometry attach='geometry' args={args} />
       <MeshWobbleMaterial
         color={color}
         speed={speed}
         attach='material'
-        factor={0.6}
+        factor={10}
       />
     </a.mesh>
     </>
+  );
+};
 
+const SpinningShape = ({ position, color, speed, args }) => {
+  //ref to target the mesh
+  const mesh = useRef();
 
-    //Using Drei box if you want
-    // <Box {...props} ref={mesh} castShadow>
-    //   <MeshWobbleMaterial
-    //     {...props}
-    //     attach='material'
-    //     factor={0.6}
-    //     Speed={1}
-    //   />
-    // </Box>
+  //useFrame allows us to re-render/update rotation on each frame
+  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
+
+  //Basic expand state
+  const [expand, setExpand] = useState(false);
+  // React spring expand animation
+  const props = useSpring({
+    scale: expand ? [0.2, 0.2, 0.2] : [1, 1, 1],
+  });
+
+  const hybrid = () => {
+    setExpand(!expand);
+    playSound()
+  };
+  return (
+    <>
+    <a.mesh
+      position={position}
+      ref={mesh}
+      onClick={hybrid}
+      scale={props.scale}
+      castShadow>
+      <tetrahedronBufferGeometry attach='geometry' args={args} />
+      <MeshWobbleMaterial
+        color={color}
+        speed={speed}
+        attach='material'
+        factor={10}
+      />
+    </a.mesh>
+    </>
+  );
+};
+
+const SpinningCircle = ({ position, color, speed, args }) => {
+  //ref to target the mesh
+  const mesh = useRef();
+
+  //useFrame allows us to re-render/update rotation on each frame
+  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
+
+  //Basic expand state
+  const [expand, setExpand] = useState(false);
+  // React spring expand animation
+  const props = useSpring({
+    scale: expand ? [0.2, 0.2, 0.2] : [1, 1, 1],
+  });
+
+  const hybrid = () => {
+    setExpand(!expand);
+    playSound()
+  };
+  return (
+    <>
+    <a.mesh
+      position={position}
+      ref={mesh}
+      onClick={hybrid}
+      scale={props.scale}
+      castShadow>
+      <torusBufferGeometry attach='geometry' args={args} />
+      <MeshWobbleMaterial
+        color={color}
+        speed={speed}
+        attach='material'
+        factor={6}
+      />
+    </a.mesh>
+    </>
   );
 };
 
@@ -89,30 +157,24 @@ const App = () => {
         <pointLight position={[-10, 0, -20]} intensity={0.5} />
         <pointLight position={[0, -10, 0]} intensity={1.5} />
         <group>
-          {/* This mesh is the plane (The floor) */}
-          <mesh
-            rotation={[-Math.PI / 2, 0, 0]}
-            position={[0, -3, 0]}
-            receiveShadow>
-            <planeBufferGeometry attach='geometry' args={[100, 100]} />
-            <shadowMaterial attach='material' opacity={0.3} />
-          </mesh>
-          <SpinningMesh
-            position={[0, 1, 0]}
-            color='lightblue'
-            args={[3, 2, 1]}
-            speed={2}
-          /> 
-          <SpinningMesh
-            position={[3, 1, -4]}
-            color='lightblue'
-            args={[3, 2, 1]}
-            speed={2}
-          /> 
-          <SpinningMesh position={[-2, 1, -5]} color='pink' speed={6} />
-          <SpinningMesh position={[5, 1, -2]} color='pink' speed={6} />
-          <SpinningMesh position={[9, 1, -3]} color='pink' speed={6} />
-          <SpinningMesh position={[-3, 1, -6]} color='pink' speed={6} />
+          {RingObj.map((shape) => <SpinningMesh 
+          position={shape.position}
+          color={shape.color}
+          args={shape.args}
+          speed={shape.speed}
+          />)}
+          {GlobeObj.map((shape) => <SpinningCircle
+          position={shape.position}
+          color={shape.color}
+          args={shape.args}
+          speed={shape.speed}
+          />)}
+          {ShapeObj.map((shape) => <SpinningShape
+          position={shape.position}
+          color={shape.color}
+          args={shape.args}
+          speed={shape.speed}
+          />)}
         </group>
         {/* Allows us to move the canvas around for different prespectives */}
         <OrbitControls autoRotate/>
